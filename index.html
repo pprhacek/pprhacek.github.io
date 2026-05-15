@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peter Prháček — Grafik</title>
+  <meta name="description" content="Peter Prháček — grafický dizajn, typografia, vizuálna identita. Bratislava." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,900;1,700;1,900&family=Barlow:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --white: #F2F0EB;
+      --red: #D4231A;
+      --muted: rgba(242,240,235,0.4);
+      --border: rgba(242,240,235,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* === GRAIN OVERLAY === */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.045;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px;
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(10px);
+      z-index: 500;
+    }
+    .nav-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .nav-logo span { color: var(--red); }
+    nav ul { display: flex; gap: 2rem; list-style: none; }
+    nav a {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--white); }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem 2.5rem 3.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 30vw;
+      line-height: 0.85;
+      color: rgba(242,240,235,0.025);
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      pointer-events: none;
+    }
+    .hero-tag {
+      position: absolute;
+      top: 6rem;
+      right: 2.5rem;
+      text-align: right;
+    }
+    .hero-tag p {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 2.2;
+    }
+    .hero-tag .red { color: var(--red); }
+    .hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(4.5rem, 15vw, 12rem);
+      line-height: 0.88;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.2s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .hero h1 .outline {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(242,240,235,0.55);
+    }
+    .hero h1 .accent {
+      display: block;
+      color: var(--red);
+      font-style: italic;
+    }
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.5s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .hero-desc {
+      max-width: 340px;
+      font-size: 0.8rem;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(242,240,235,0.2);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 44px;
+      background: rgba(242,240,235,0.15);
+      overflow: hidden;
+      position: relative;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--white);
+      animation: drop 2s 1.2s infinite;
+    }
+
+    /* === MARQUEE === */
+    .marquee-wrap {
+      overflow: hidden;
+      padding: 0.85rem 0;
+      background: var(--red);
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 14s linear infinite;
+    }
+    .marquee-item {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding: 0 2rem;
+      color: var(--bg);
+    }
+    .marquee-sep { color: rgba(10,10,10,0.35); }
+
+    /* === SECTIONS === */
+    section { padding: 5rem 2.5rem; }
+    .s-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .s-label .num {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .s-label .title {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .s-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* === CARDS (projekty s obrázkami) === */
+    /*
+     * ─────────────────────────────────────────────────────────────
+     * JAK PRIDAŤ NOVÝ PROJEKT S OBRÁZKOM:
+     * 1. Ulož obrázok do priečinka images/
+     * 2. Skopíruj celý blok <div class="card"> ... </div>
+     * 3. Zmeň src="images/TVOJ-OBRAZOK.jpg"
+     * 4. Zmeň názov a kategóriu v .card-title a .card-cat
+     * ─────────────────────────────────────────────────────────────
+     */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+    .card {
+      background: var(--bg);
+      overflow: hidden;
+      cursor: crosshair;
+    }
+    /* Prvá karta zaberá celú šírku */
+    .card:first-child { grid-column: span 2; }
+
+    .card-img-wrap {
+      overflow: hidden;
+    }
+    .card-img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(100%) contrast(1.1);
+      transition: filter 0.45s ease, transform 0.55s cubic-bezier(.22,1,.36,1);
+    }
+    .card:first-child .card-img { aspect-ratio: 21 / 9; }
+    .card:hover .card-img {
+      filter: grayscale(0%) contrast(1);
+      transform: scale(1.04);
+    }
+    .card-info {
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border);
+    }
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .card-cat {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .card-arrow {
+      font-size: 1.2rem;
+      color: var(--border);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .card:hover .card-arrow { color: var(--red); transform: translate(3px,-3px); }
+
+    /* === PROJECT LIST === */
+    /*
+     * ─────────────────────────────────────────────────────────────
+     * JAK PRIDAŤ RIADOK DO ZOZNAMU PROJEKTOV:
+     * Skopíruj celý blok <a class="work-row"> ... </a>
+     * a zmeň číslo, názov, kategóriu a rok.
+     * ─────────────────────────────────────────────────────────────
+     */
+    .work-list { border-top: 1px solid var(--border); }
+    .work-row {
+      display: grid;
+      grid-template-columns: 3rem 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(242,240,235,0.06);
+      text-decoration: none;
+      color: var(--white);
+      transition: padding-left 0.25s cubic-bezier(.22,1,.36,1);
+      cursor: crosshair;
+    }
+    .work-row:hover { padding-left: 1rem; }
+    .work-row:hover .w-num { color: var(--red); }
+    .w-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: rgba(242,240,235,0.2);
+      transition: color 0.2s;
+    }
+    .w-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+    .w-meta {
+      text-align: right;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    /* === ABOUT === */
+    #about { border-top: 1px solid var(--border); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-left h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 7vw, 6rem);
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .about-left h2 .outline {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(242,240,235,0.45);
+    }
+    .about-left h2 .red { color: var(--red); }
+    .about-right p {
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .manifesto {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--white);
+      border-left: 2px solid var(--red);
+      padding-left: 1rem;
+      margin: 2rem 0;
+    }
+
+    /* === CONTACT LINKS === */
+    /*
+     * ─────────────────────────────────────────────────────────────
+     * JAK ZMENIŤ KONTAKTNÉ ÚDAJE:
+     * Nájdi <div class="contact-links"> a uprav href="" a text.
+     * ─────────────────────────────────────────────────────────────
+     */
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 2.5rem;
+    }
+    .contact-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color 0.15s;
+    }
+    .contact-links a:hover { color: var(--white); }
+    .contact-links a::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.2s;
+      flex-shrink: 0;
+    }
+    .contact-links a:hover::before { width: 40px; }
+
+    /* === FOOTER === */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(242,240,235,0.2);
+    }
+    footer .f-logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      color: rgba(242,240,235,0.12);
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes drop {
+      0%   { top: -100%; }
+      100% { top: 200%; }
+    }
+    @keyframes marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.25rem; }
+      nav ul { gap: 1.2rem; }
+      section { padding: 3.5rem 1.25rem; }
+      .hero { padding: 2rem 1.25rem 3rem; }
+      .hero-tag { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .card:first-child { grid-column: span 1; }
+      footer { padding: 1.2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     NAVIGÁCIA
+     Zmeň meno a odkazy podľa potreby
+═══════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">PP<span>.</span></a>
+  <ul>
+    <li><a href="#prace">Práce</a></li>
+    <li><a href="#about">O mne</a></li>
+    <li><a href="#kontakt">Kontakt</a></li>
+  </ul>
+</nav>
+
+
+<!-- ═══════════════════════════════
+     HERO — úvodná sekcia
+     Zmeň meno, pozíciu, krátky popis
+═══════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">PP</div>
+
+  <div class="hero-tag">
+    <p>Grafik / Kreatívec</p>
+    <p class="red">Bratislava — SK</p>
+    <p>WDCWC</p>
+  </div>
+
+  <h1>
+    Peter
+    <span class="outline">Prháček</span>
+    <span class="accent">Grafik.</span>
+  </h1>
+
+  <div class="hero-foot">
+    <p class="hero-desc">Grafický dizajn, typografia, vizuálna identita.<br>Don't care — create.</p>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      scroll
+    </div>
+  </div>
+</section>
+
+
+<!-- BEŽIACI TEXT (marquee) -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track">
+    <!-- 2× ten istý obsah = seamless loop -->
+    <span class="marquee-item">Grafický dizajn <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Typografia <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Branding <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Art direction <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Vizuálna identita <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">WDCWC <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Grafický dizajn <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Typografia <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Branding <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Art direction <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">Vizuálna identita <span class="marquee-sep">✦</span></span>
+    <span class="marquee-item">WDCWC <span class="marquee-sep">✦</span></span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════
+     PROJEKTY — karty s obrázkami
+     Sekcia id="prace"
+═══════════════════════════════ -->
+<section id="prace" class="reveal">
+  <div class="s-label">
+    <span class="num">01</span>
+    <span class="title">Vybrané práce</span>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  PROJEKT 1 — široká karta (celá šírka)  ║
+         ║  Zmeň: src, card-title, card-cat        ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="images/noolateaser.jpg" alt="Noola Teaser" />
+      </div>
+      <div class="card-info">
+        <div>
+          <span class="card-title">Noola Teaser</span>
+          <span class="card-cat">Grafický dizajn · Typografia · 2024</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  PROJEKT 2 — ľavá karta                 ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="images/noolalogo.jpg" alt="Noola Logo" />
+      </div>
+      <div class="card-info">
+        <div>
+          <span class="card-title">Noola Logo</span>
+          <span class="card-cat">Brand identity · 2024</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  PROJEKT 3 — pravá karta                ║
+         ╚══════════════════════════════════════════╝ -->
+    <div class="card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="images/horippada.jpg" alt="Horí Pada 3.4." />
+      </div>
+      <div class="card-info">
+        <div>
+          <span class="card-title">Horí, Pada 3.4.</span>
+          <span class="card-cat">Plagát · Event vizuál · 2024</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  SEM PRIDAJ ĎALŠÍ PROJEKT:              ║
+         ║  Skopíruj celý blok <div class="card">  ║
+         ║  Zmeň obrázok, názov a kategóriu        ║
+         ╚══════════════════════════════════════════╝
+    <div class="card">
+      <div class="card-img-wrap">
+        <img class="card-img" src="images/NOVY-PROJEKT.jpg" alt="Popis" />
+      </div>
+      <div class="card-info">
+        <div>
+          <span class="card-title">Názov projektu</span>
+          <span class="card-cat">Kategória · Rok</span>
+        </div>
+        <span class="card-arrow">↗</span>
+      </div>
+    </div>
+    -->
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     ZOZNAM VŠETKÝCH PROJEKTOV
+═══════════════════════════════ -->
+<section class="reveal" style="padding-top: 0;">
+  <div class="s-label">
+    <span class="num">02</span>
+    <span class="title">Všetky projekty</span>
+  </div>
+
+  <div class="work-list">
+
+    <!-- ╔══════════════════════════════════════════╗
+         ║  Riadok projektu                        ║
+         ║  href="" = link na projekt / Instagram  ║
+         ╚══════════════════════════════════════════╝ -->
+    <a href="#" class="work-row">
+      <span class="w-num">001</span>
+      <span class="w-title">Noola</span>
+      <div class="w-meta">Brand identity<br>2024</div>
+    </a>
+
+    <a href="#" class="work-row">
+      <span class="w-num">002</span>
+      <span class="w-title">Horí, Pada 3.4.</span>
+      <div class="w-meta">Event plagát<br>2024</div>
+    </a>
+
+    <a href="#" class="work-row">
+      <span class="w-num">003</span>
+      <span class="w-title">WDCWC</span>
+      <div class="w-meta">Vizitka · Print<br>2024</div>
+    </a>
+
+    <!-- SEM PRIDAJ NOVÝ RIADOK:
+    <a href="#" class="work-row">
+      <span class="w-num">004</span>
+      <span class="w-title">Názov projektu</span>
+      <div class="w-meta">Kategória<br>2025</div>
+    </a>
+    -->
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     O MNE
+     Zmeň text, skill tagy, sociálne siete
+═══════════════════════════════ -->
+<section id="about" class="reveal">
+  <div class="s-label">
+    <span class="num">03</span>
+    <span class="title">O mne</span>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-left">
+      <h2>
+        Don't<br>
+        <span class="outline">Care—</span><br>
+        <span class="red">Create.</span>
+      </h2>
+    </div>
+    <div class="about-right">
+      <div class="manifesto">WDCWC — to som ja.</div>
+
+      <!-- ZMEŇ TEXT O SEBE -->
+      <p>Volám sa Peter Prháček. Som grafik z Bratislavy. Robím veci, ktoré vyzerajú ako by mali — bold, surové, bez kompromisov.</p>
+      <p>Typografia je môj jazyk. Vizuálna identita môj nástroj. Ak máš projekt, kde záleží na každom pixeli — ozvi sa.</p>
+
+      <!-- KONTAKTNÉ LINKY — zmeň href a text -->
+      <div class="contact-links" id="kontakt">
+        <a href="https://instagram.com/pprhacek" target="_blank" rel="noopener">@pprhacek</a>
+        <a href="mailto:pprhacek@gmail.com">pprhacek@gmail.com</a>
+        <a href="tel:+421910525554">0910 525 554</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Peter Prháček</p>
+  <span class="f-logo">PP.</span>
+  <p>Bratislava, SK</p>
+</footer>
+
+
+<script>
+  // Scroll reveal animácia
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
